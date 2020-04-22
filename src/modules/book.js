@@ -21,6 +21,7 @@ const bookSchema = mongoose.Schema({
 //     const a = await Promise.all(genresArray)
 
 bookSchema.pre('save',async function (next) {
+    console.log(this)
     this.author = await Author.findById(this.author)
     const genresArray = this.genres.map(async el => await Genre.findById(el))
     this.genres = await Promise.all(genresArray)

@@ -6,6 +6,8 @@ const bodyParser = require("body-parser")
 const {readAuthor, createAuthor, updateAuthor, deleteAuthor} = require("./src/controllers/authorController")
 const {readGenre, createGenre, updateGenre, deleteGenre} = require("./src/controllers/genreController")
 const {createBook} = require("./src/controllers/bookController")
+const {createUser} = require("./src/controllers/userController")
+const {login, auth} = require("./src/controllers/authController")
 const router = express.Router()
 mongoose.connect(process.env.DB_LOCAL, {
     // some options to deal with deprecated warning, you don't have to worry about them.
@@ -42,7 +44,13 @@ router.put("/genres/:id", updateGenre)
 
 //book
 router.route("/books")
-.post(createBook)
+.post(auth, createBook)
+
+router.route("/users")
+.post(createUser)
+
+router.route("/auth/login")
+.post(login)
 
 app.listen(process.env.PORT, () => {
     console.log("App is running on port", process.env.PORT)

@@ -14,7 +14,11 @@ const bookSchema = mongoose.Schema({
         trim: true
     },
     genres: Array,
-    author: Object
+    author: Object,
+    owner: {
+        type: Object,
+        require: [true, "Blog must have an owner"]
+    }
 })
 // const authorObj = await Author.findById(author)
 //     const genresArray = genres.map(async el => await Genre.findById(el))

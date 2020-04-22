@@ -4,14 +4,27 @@ const Book = require("../modules/book")
 exports.createBook = async (req, res) => {
     const { title, genres, author, description } = req.body
     console.log(title, genres, author, description)
-    
-    const book = new Book({ // create new instance iherence class Book
-        title: title,
-        description: description, 
-        genres: genres,
-        author: author
-    })
-    await book.save() // chang title, des, genres, author and save in database
-    res.status(201).json({status:"ok", data: book})
-
+    try {
+        const newBook = new Book({ // create new instance iherence class Book
+            ...req.body,
+            owner: {
+                _id: req.user._id,
+                name: req.user.name,
+                email: req.user.email
+            }
+        })
+        await newBook.save() // chang title, des, genres, author and save in database
+        res.status(201).json({ status: "ok", data: newBook })
+    } catch (err) {
+        res.status(400).json({ status: "fail", message: err.message });
+    }
 }
+
+exports.readBooks = async (req, res) => {
+    try {
+      const books = await Book.find({ "owner._id": req.user._id });
+      res.json({ status: "success", data: books });
+    } catch (error) {
+      res.status(400).json({ status: "fail", message: error.message });
+    };
+  };

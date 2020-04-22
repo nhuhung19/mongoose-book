@@ -26,12 +26,13 @@ const schema = mongoose.Schema({
         type: String,
         required: [true, "password is requied"]
     },
-    token: [String]
+    tokens: [String]
 })
 
 // var jsonToken = jwt.sign({ email: 'bar'},process.env.SECRET );
 
 schema.statics.loginWithCredentials = async (email, password) => {
+    // use email to find the correct user or document
     const user = await User.findOne({email: email})
     if(!user) throw new Error("User not found")
     //check password, compare raw password
@@ -42,10 +43,10 @@ schema.statics.loginWithCredentials = async (email, password) => {
 
 
 schema.methods.generateToken = async function (){
-    const jsonToken = jwt.sign({ email: this.email,id: this._id}, process.env.SECRET );
+    const jsonToken = jwt.sign({ email: this.email,id: this._id}, process.env.SECRET,{ expiresIn: '7d' } );
 
     //save token to database
-    this.token.push(jsonToken)
+    this.tokens.push(jsonToken)
     await this.save()
     return jsonToken
 }

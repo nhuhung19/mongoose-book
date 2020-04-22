@@ -5,9 +5,9 @@ const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const {readAuthor, createAuthor, updateAuthor, deleteAuthor} = require("./src/controllers/authorController")
 const {readGenre, createGenre, updateGenre, deleteGenre} = require("./src/controllers/genreController")
-const {createBook} = require("./src/controllers/bookController")
+const {createBook, readBooks} = require("./src/controllers/bookController")
 const {createUser} = require("./src/controllers/userController")
-const {login, auth} = require("./src/controllers/authController")
+const {login, auth, logout} = require("./src/controllers/authController")
 const router = express.Router()
 mongoose.connect(process.env.DB_LOCAL, {
     // some options to deal with deprecated warning, you don't have to worry about them.
@@ -28,29 +28,32 @@ app.get("/", (req, res) => {
 
 //POST create a new author
 router.route("/authors")
-.get(readAuthor)
-.post(createAuthor)
+.get(auth, readAuthor)
+.post(auth, createAuthor)
 
-router.delete("/authors/:id",deleteAuthor)
-router.put("/authors/:id",updateAuthor)
+router.delete("/authors/:id", auth, deleteAuthor)
+router.put("/authors/:id",auth, updateAuthor)
 
 //genre
 router.route("/genres")
-.get(readGenre)
-.post(createGenre)
+.get(auth, readGenre)
+.post(auth, createGenre)
 
-router.delete("/genres/:id", deleteGenre)
-router.put("/genres/:id", updateGenre)
+router.delete("/genres/:id",auth , deleteGenre)
+router.put("/genres/:id",auth, updateGenre)
 
 //book
 router.route("/books")
 .post(auth, createBook)
+.get(auth, readBooks)
 
 router.route("/users")
 .post(createUser)
 
 router.route("/auth/login")
 .post(login)
+
+router.get("/logout", auth, logout);
 
 app.listen(process.env.PORT, () => {
     console.log("App is running on port", process.env.PORT)

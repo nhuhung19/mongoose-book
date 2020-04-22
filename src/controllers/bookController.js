@@ -20,11 +20,32 @@ exports.createBook = async (req, res) => {
     }
 }
 
+// exports.updateBooks = async (req, res) => {
+//     const {title, description, genres, author } = req.body
+//     try {
+//         const books = await Book.findByIdAndUpdate({ "owner._id": req.user._id });
+//         res.json({ status: "success", data: books });
+//     } catch (error) {
+//         res.status(400).json({ status: "fail", message: error.message });
+//     };
+// };
+
 exports.readBooks = async (req, res) => {
     try {
-      const books = await Book.find({ "owner._id": req.user._id });
-      res.json({ status: "success", data: books });
+        const books = await Book.find({ "owner._id": req.user._id });
+        res.json({ status: "success", data: books });
     } catch (error) {
-      res.status(400).json({ status: "fail", message: error.message });
+        res.status(400).json({ status: "fail", message: error.message });
     };
-  };
+};
+
+exports.deleteBooks = async (req, res) => {
+    try {
+        await Book.findByIdAndDelete(req.body.id);
+        res.json({ status: "success", data: null });
+    } catch (error) {
+        res.status(400).json({ status: "fail", message: error.message });
+    };
+};
+
+

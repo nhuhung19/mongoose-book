@@ -56,3 +56,13 @@ exports.logout = async function (req, res) {
       res.status(401).json({ status: "fail", message: err.message });
     };
   }
+
+  exports.logoutAll = async function (req, res) {
+    try {
+      req.user.tokens = [];
+      await req.user.save();
+      res.status(204).json({ status: "success", data: null });
+    } catch (err) {
+      res.status(401).json({ status: "fail", message: err.message });
+    };
+  }

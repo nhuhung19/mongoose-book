@@ -41,7 +41,7 @@ exports.readBooks = async (req, res) => {
 
 exports.deleteBooks = async (req, res) => {
     try {
-        await Book.findByIdAndDelete(req.body.id);
+        await Book.findByIdAndDelete(req.params.id);
         res.json({ status: "success", data: null });
     } catch (error) {
         res.status(400).json({ status: "fail", message: error.message });
